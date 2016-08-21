@@ -89,7 +89,9 @@ All properties are optional
 
 - **`weekDaysLocale`** _(arrayOf(string))_ — Strings for localization, which will be displayed in week day header, started from sunday.
 
-- **`isFutureDate`** _(boolean)_ — True if you want to select a future date. By default is **false**.
+- **`isFutureDate`** _(bool)_ — True if you want to select a future date. By default is **false**.
+
+- **`rangeSelect`** _(bool)_ — True if you want to select a range of dates. By default is **true**.
 
 ### Colors
  
