@@ -125,7 +125,7 @@ export default class Calendar extends React.Component {
                     date: day,
                     status: this.getStatus(day, this.selectFrom, this.selectTo),
                     disabled: day.getMonth() !== monthIterator.getMonth()
-                    || (this.props.isFutureDate) ? startUTC > dateUTC : startUTC < dateUTC
+                    || ((this.props.isFutureDate) ? startUTC > dateUTC : startUTC < dateUTC)
 
                 }
             }));
