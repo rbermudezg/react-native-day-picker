@@ -200,7 +200,7 @@ export default class Calendar extends React.Component {
             })
         });
 
-        if (!this.props.rangeSelect) {
+        if (this.props.rangeSelect) {
             this.selectFrom = selectFrom;
             this.selectTo = selectTo;
         } else {
