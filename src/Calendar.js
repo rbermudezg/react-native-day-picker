@@ -114,7 +114,18 @@ export default class Calendar extends React.Component {
     componentWillReceiveProps(nextProps) {
         if(this.props.markedDays !== nextProps.markedDays){
             this.markedDays = this.generateSelectedDays(nextProps.markedDays);
-            this.changeSelection(null)
+            this.months = this.months.map((month) => {
+                return month.map((day) => {
+                    return {
+                        date: day.date,
+                        status: this.getStatus(day.date, this.selectFrom, this.selectTo, this.markedDays),
+                        disabled: day.disabled
+                    }
+                })
+            });
+            this.setState({
+                dataSource: this.state.dataSource.cloneWithRows(this.months)
+            })
         }
     }
 
