@@ -93,6 +93,8 @@ All properties are optional
 
 - **`rangeSelect`** _(bool)_ — True if you want to select a range of dates. By default is **true**.
 
+- **`markedDays`** _(arrayOf(date))_ — Array with dates that will be marked in calendar with different color, useful for disable hollydays. By default is **empty array**.
+
 ### Colors
  
 - **`bodyBackColor`** _(string)_ — Calendar background color.
@@ -116,6 +118,10 @@ All properties are optional
 - **`dayInRangeBackColor`** _(string)_ — In range day background color.
 
 - **`dayInRangeTextColor`** _(string)_ — In range day text color.
+
+- **`dayMarkedBackColor`** _(string)_ — Marked day background color.
+
+- **`dayMarkedTextColor`** _(string)_ — Marked day text color.
 
 ## Support
 

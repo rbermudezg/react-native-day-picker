@@ -41,9 +41,14 @@ export default class Calendar extends React.Component {
         dayInRangeBackColor: '#87cefa',
         dayInRangeTextColor: 'black',
 
+        dayMarkedBackColor: '#87cefa',
+        dayMarkedTextColor: 'black',
+
         isFutureDate: false,
 
-        rangeSelect: true
+        rangeSelect: true,
+
+        markedDays: []
     };
 
     static propTypes = {
@@ -77,9 +82,14 @@ export default class Calendar extends React.Component {
         dayInRangeBackColor: PropTypes.string,
         dayInRangeTextColor: PropTypes.string,
 
+        dayMarkedBackColor: PropTypes.string,
+        dayMarkedTextColor: PropTypes.string,
+
         isFutureDate: PropTypes.bool,
 
-        rangeSelect: PropTypes.bool
+        rangeSelect: PropTypes.bool,
+
+        markedDays: PropTypes.arrayOf(PropTypes.object)
     };
 
     constructor(props) {
@@ -101,6 +111,13 @@ export default class Calendar extends React.Component {
         }
     }
 
+    componentWillReceiveProps(nextProps) {
+        if(this.props.markedDays !== nextProps.markedDays){
+            this.markedDays = this.generateSelectedDays(nextProps.markedDays);
+            this.changeSelection(null)
+        }
+    }
+
     rowHasChanged(r1, r2) {
         for (var i = 0; i < r1.length; i++) {
             if (r1[i].status !== r2[i].status && !r1[i].disabled) {
@@ -115,6 +132,7 @@ export default class Calendar extends React.Component {
         var monthIterator = startDate;
 
         var startUTC = Date.UTC(startDate.getYear(), startDate.getMonth(), startDate.getDate());
+        this.markedDays = this.generateSelectedDays(this.props.markedDays);
 
         for (var i = 0; i < count; i++) {
             var month = this.getDates(monthIterator, this.props.startFromMonday);
@@ -123,7 +141,7 @@ export default class Calendar extends React.Component {
                 dateUTC = Date.UTC(day.getYear(), day.getMonth(), day.getDate());
                 return {
                     date: day,
-                    status: this.getStatus(day, this.selectFrom, this.selectTo),
+                    status: this.getStatus(day, this.selectFrom, this.selectTo, this.markedDays),
                     disabled: day.getMonth() !== monthIterator.getMonth()
                     || ((this.props.isFutureDate) ? startUTC > dateUTC : startUTC < dateUTC)
 
@@ -141,6 +159,12 @@ export default class Calendar extends React.Component {
         return months;
     }
 
+    generateSelectedDays(markedDays) {
+        return markedDays.map((date) => {
+            return date.toDateString();
+        });    
+    }
+    
     getDates(month, startFromMonday) {
         month = new Date(month);
         month.setDate(1);
@@ -175,7 +199,7 @@ export default class Calendar extends React.Component {
     }
 
     changeSelection(value) {
-        var {selectFrom, selectTo, months} = this;
+        var {selectFrom, selectTo, markedDays, months} = this;
 
         if (!selectFrom) {
             selectFrom = value;
@@ -194,7 +218,7 @@ export default class Calendar extends React.Component {
             return month.map((day) => {
                 return {
                     date: day.date,
-                    status: this.getStatus(day.date, selectFrom, selectTo),
+                    status: this.getStatus(day.date, selectFrom, selectTo, markedDays),
                     disabled: day.disabled
                 }
             })
@@ -217,14 +241,16 @@ export default class Calendar extends React.Component {
         })
     }
 
-    getStatus(date, selectFrom, selectTo) {
+    getStatus(date, selectFrom, selectTo, markedDays) {
+        let dateString = date.toDateString();
+
         if (selectFrom) {
-            if (selectFrom.toDateString() === date.toDateString()) {
+            if (selectFrom.toDateString() === dateString) {
                 return 'selected';
             }
         }
         if (selectTo) {
-            if (selectTo.toDateString() === date.toDateString()) {
+            if (selectTo.toDateString() === dateString) {
                 return 'selected';
             }
         }
@@ -232,6 +258,9 @@ export default class Calendar extends React.Component {
             if (selectFrom < date && date < selectTo) {
                 return 'inRange';
             }
+        }
+        if(markedDays && markedDays.indexOf(dateString) !== -1){
+            return 'marked';
         }
         return 'common';
     }
