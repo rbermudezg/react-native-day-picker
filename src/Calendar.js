@@ -255,6 +255,9 @@ export default class Calendar extends React.Component {
     getStatus(date, selectFrom, selectTo, markedDays) {
         let dateString = date.toDateString();
 
+        if(markedDays && markedDays.indexOf(dateString) !== -1){
+            return 'marked';
+        }
         if (selectFrom) {
             if (selectFrom.toDateString() === dateString) {
                 return 'selected';
@@ -270,14 +273,12 @@ export default class Calendar extends React.Component {
                 return 'inRange';
             }
         }
-        if(markedDays && markedDays.indexOf(dateString) !== -1){
-            return 'marked';
-        }
+        
         return 'common';
     }
 
     render() {
-        let {style} = this.props;
+        let {style, contentContainerStyle} = this.props;
         let directionStyles = {};
 
         if(!this.props.isFutureDate){
@@ -291,6 +292,7 @@ export default class Calendar extends React.Component {
                 initialListSize={5}
                 scrollRenderAheadDistance={1200}
                 style={[styles.listViewContainer, directionStyles, style]}
+                contentContainerStyle={contentContainerStyle}
                 dataSource={this.state.dataSource}
                 renderRow={(month) => {
                     return (
